@@ -8,7 +8,7 @@ from llm_ui_integration.ui_integrator import UIIntegrator
 from bson import ObjectId
 from datetime import datetime
 
-from autobyteus_community_tools.social_media_poster.xiaohongshu.repositories.book_review_repository import ReviewedBooksRepository
+from autobyteus_community_tools.social_media_poster.xiaohongshu.repositories.book_review_repository import ReviewedBooksRepository, XiaohongshuBookReviewModel
 
 class XiaohongshuPoster(BaseTool, UIIntegrator):
     def __init__(self, xiaohongshu_account_name):

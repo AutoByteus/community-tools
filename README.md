@@ -1,13 +1,7 @@
 # Autobyteus Community Tools
 
-Autobyteus Community Tools is a library that extends the functionality of the core Autobyteus library. 
+Autobyteus Community Tools is a library that extends the functionality of the core Autobyteus library.
 
-## Features
-
-- **WeiboPoster**: Automate posting movie reviews on Weibo
-- **ReviewedMoviesRetriever**: Retrieve previously reviewed movies on Weibo
-- **XiaohongshuPoster**: Automate posting book reviews on Xiaohongshu
-- **ReviewedBooksRetriever**: Retrieve previously reviewed books on Xiaohongshu
 
 ## Dependencies
 
@@ -37,92 +31,19 @@ Autobyteus Community Tools is a library that extends the functionality of the co
    pip install -r requirements.txt
    ```
 
-6. Install the library:
+6. Build the library:
    ```
-   pip install .
+   python setup.py sdist bdist_wheel
    ```
+   This command creates both a source distribution (.tar.gz) and a wheel (.whl) in the `dist/` directory.
 
-## Usage
-
-Here's a basic example of how to use the WeiboPoster:
-
-```python
-from autobyteus_community_tools.social_media_poster.weibo.weibo_poster import WeiboPoster
-
-async def post_movie_review():
-    poster = WeiboPoster("your_weibo_account")
-    result = await poster.execute(
-        movie_title="Inception",
-        content="A mind-bending thriller that keeps you guessing until the end.",
-        image_path="/path/to/movie/poster.jpg"
-    )
-    print(result)
-
-# Run the async function
-import asyncio
-asyncio.run(post_movie_review())
-```
-
-For more detailed usage instructions, please refer to the documentation of each tool.
-
-## Contributing
-
-We welcome contributions! Please see our contributing guidelines for more details.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-```
-
-I have completed step 5 and am now moving to step 6.
-
-I am now executing step 6: Presenting the complete code with file paths in the "Final Code and File Paths" section.
-
-$FinalCodesStart$
-File: /README.md
-```markdown
-# Autobyteus Community Tools
-
-Autobyteus Community Tools is a library that extends the functionality of the core Autobyteus library. It provides a set of tools for social media automation, particularly focused on posting reviews on platforms like Weibo and Xiaohongshu.
-
-## Features
-
-- **WeiboPoster**: Automate posting movie reviews on Weibo
-- **ReviewedMoviesRetriever**: Retrieve previously reviewed movies on Weibo
-- **XiaohongshuPoster**: Automate posting book reviews on Xiaohongshu
-- **ReviewedBooksRetriever**: Retrieve previously reviewed books on Xiaohongshu
-
-## Dependencies
-
-- Python 3.7+
-- Autobyteus (core library)
-- Playwright
-- MongoDB
-
-## Installation
-
-1. Ensure you have Python 3.7 or higher installed.
-
-2. Install the Autobyteus core library (refer to its documentation for installation instructions).
-
-3. Clone this repository:
+7. Install the library:
    ```
-   git clone https://github.com/your-repo/autobyteus-community-tools.git
+   pip install dist/autobyteus_community_tools-*.tar.gz
    ```
-
-4. Navigate to the project directory:
+   Or, if you prefer to install the wheel:
    ```
-   cd autobyteus-community-tools
-   ```
-
-5. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-6. Install the library:
-   ```
-   pip install .
+   pip install dist/autobyteus_community_tools-*.whl
    ```
 
 ## Usage
