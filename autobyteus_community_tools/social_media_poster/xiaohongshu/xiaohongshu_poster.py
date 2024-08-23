@@ -1,4 +1,4 @@
-# File: autobyteus/tools/social_media_poster/xiaohongshu/xiaohongshu_poster.py
+# File: autobyteus_community_tools/social_media_poster/xiaohongshu/xiaohongshu_poster.py
 
 import asyncio
 import pyperclip
