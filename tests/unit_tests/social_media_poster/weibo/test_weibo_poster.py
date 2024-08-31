@@ -19,10 +19,7 @@ async def test_weibo_poster_text_with_image():
     # Test posting text with an image
     movie_title = "Inception"
     content_with_image = "This is a test post with an image from an automated integration test. Please ignore."
-    image_path = "/home/ryan-ai/Downloads/weibo.jpeg"  # Replace with an actual image path on your system
-    
-    if not os.path.exists(image_path):
-        pytest.skip(f"Test image not found at {image_path}. Skipping image upload test.")
+    image_path = "/Users/ryan-zheng/Downloads/testimaging.webp"  # Replace with an actual image path on your system
     
     result_with_image = await weibo_poster.execute(movie_title=movie_title, content=content_with_image, image_path=image_path)
 

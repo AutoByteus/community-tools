@@ -3,6 +3,7 @@
 import asyncio
 import os
 import logging
+import platform
 from typing import Optional
 from autobyteus.tools.base_tool import BaseTool
 from llm_ui_integration.ui_integrator import UIIntegrator
@@ -47,8 +48,23 @@ class WeiboPoster(BaseTool, UIIntegrator):
         where "movie_title" is a string representing the title of the movie being reviewed, "review content" is a string containing the review text which is written in Chinese, and "image_path" is an optional full file path to an image.
         '''
     
+    def _get_operating_system(self):
+        """
+        Detect the current operating system.
+        """
+        return platform.system()
+
+    async def _manual_image_upload(self):
+        """
+        Prompt the user to manually upload an image and wait for the upload to finish.
+        """
+        print("Please manually upload an image for your Weibo post.")
+        await self.wait_for_image_upload()
+        logger.info("Manual image upload completed.")
+
     async def wait_for_image_upload(self):
-        await self.page.wait_for_selector(self.uploaded_image_selector, timeout=10000)
+        await self.page.wait_for_selector(self.uploaded_image_selector, timeout=60000)
+        logger.info("Image upload detected.")
 
     async def wait_for_file_chooser_dialog(self, timeout=10):
         start_time = asyncio.get_event_loop().time()
@@ -123,6 +139,16 @@ class WeiboPoster(BaseTool, UIIntegrator):
             await self.close()
 
     async def upload_image(self, image_path):
+        os_type = self._get_operating_system()
+        
+        if os_type == "Darwin":  # macOS
+            await self._manual_image_upload()
+        elif os_type == "Linux":
+            await self._auto_image_upload(image_path)
+        else:
+            raise OSError(f"Unsupported operating system: {os_type}")
+
+    async def _auto_image_upload(self, image_path):
         await self.page.click(self.image_upload_button_selector)
         dialog_appeared = await self.wait_for_file_chooser_dialog()
         if not dialog_appeared:
