@@ -1,4 +1,3 @@
-# File: autobyteus_community_tools/social_media_poster/xiaohongshu/xiaohongshu_poster.py
 import asyncio
 import pyperclip
 import sys
@@ -31,29 +30,27 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
         usage = (
             "XiaohongshuPoster: Publishes a book review on Xiaohongshu (小红书). "
             "This tool allows you to create engaging book review posts with both original title (in any language) and Chinese translated title. "
-            "Note: The translated_title must be within 20 words and will be used as the post title.\n"
-            "Usage: <<<XiaohongshuPoster(original_title=\"Original Title\", translated_title=\"中文标题 (20 words max)\", content=\"Book review content in Chinese\", image_filename=\"image.jpg\")>>>\n\n"
+            "Note: The translated_title must be within 20 words and will be used as the post title. The image_path is optional.\n"
+            "Usage: <<<XiaohongshuPoster(original_title=\"Original Title\", translated_title=\"中文标题 (20 words max)\", content=\"Book review content in Chinese\", image_path=\"/full/path/to/image.jpg\")>>>\n\n"
             "Examples:\n"
-            "1. English book:\n"
+            "1. English book with image:\n"
             "<<<XiaohongshuPoster(\n"
             "    original_title=\"To Live\",\n"
             "    translated_title=\"活着\",\n"
             "    content=\"余华的《活着》是一部震撼人心的小说，讲述了一个普通中国家庭在动荡年代的生存故事。...\",\n"
-            "    image_filename=\"to_live_cover.jpg\"\n"
+            "    image_path=\"/home/user/Downloads/to_live_cover.jpg\"\n"
             ")>>>\n\n"
-            "2. French book:\n"
+            "2. French book without image:\n"
             "<<<XiaohongshuPoster(\n"
             "    original_title=\"Le Petit Prince\",\n"
             "    translated_title=\"小王子\",\n"
-            "    content=\"《小王子》是一部充满哲理的童话故事，讲述了一个来自外星球的小王子的奇妙冒险...\",\n"
-            "    image_filename=\"le_petit_prince_cover.jpg\"\n"
+            "    content=\"《小王子》是一部充满哲理的童话故事，讲述了一个来自外星球的小王子的奇妙冒险...\"\n"
             ")>>>\n\n"
             "3. INCORRECT EXAMPLE - DO NOT USE:\n"
             "<<<XiaohongshuPoster(\n"
             "    original_title=\"The Catcher in the Rye\",\n"
             "    translated_title=\"麦田里的守望者：一部探讨青春期叛逆与成长的经典小说，深刻剖析了现代社会中年轻人的困惑与迷茫\",\n"
-            "    content=\"...\",\n"
-            "    image_filename=\"catcher_in_the_rye.jpg\"\n"
+            "    content=\"...\"\n"
             ")>>>\n"
             "THIS IS ABSOLUTELY WRONG! The translated_title is way over the 20-word limit. "
             "Such long titles are strictly prohibited and will cause the post to fail. "
@@ -62,30 +59,29 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
         return usage
 
     def tool_usage_xml(self) -> str:
-        usage = '''XiaohongshuPoster: Publishes a book review on Xiaohongshu (小红书). This tool creates engaging book review posts with both original title (in any language) and Chinese translated title. Note: The translated_title must be within 20 words and will be used as the post title. Usage:
+        usage = '''XiaohongshuPoster: Publishes a book review on Xiaohongshu (小红书). This tool creates engaging book review posts with both original title (in any language) and Chinese translated title. Note: The translated_title must be within 20 words and will be used as the post title. The image_path is optional. Usage:
         <command name="XiaohongshuPoster">
             <arg name="original_title">Original Title (in any language)</arg>
             <arg name="translated_title">中文标题 (20 words max)</arg>
             <arg name="content">Book review content in Chinese</arg>
-            <arg name="image_filename">Cover image filename</arg>
+            <arg name="image_path" optional="true">Full path to cover image file</arg>
         </command>
-        where "original_title" is the book's title in its original language, "translated_title" is the Chinese translation of the title (max 20 words) and will be used as the post title, "content" is the main text of the review in Chinese, and "image_filename" is the name of the cover image file.
+        where "original_title" is the book's title in its original language, "translated_title" is the Chinese translation of the title (max 20 words) and will be used as the post title, "content" is the main text of the review in Chinese, and "image_path" is the optional full path to the cover image file.
 
         Examples:
-        1. English book:
+        1. English book with image:
         <command name="XiaohongshuPoster">
             <arg name="original_title">To Live</arg>
             <arg name="translated_title">活着</arg>
             <arg name="content">余华的《活着》是一部震撼人心的小说，讲述了一个普通中国家庭在动荡年代的生存故事。...</arg>
-            <arg name="image_filename">to_live_cover.jpg</arg>
+            <arg name="image_path">/home/user/Downloads/to_live_cover.jpg</arg>
         </command>
 
-        2. French book:
+        2. French book without image:
         <command name="XiaohongshuPoster">
             <arg name="original_title">Le Petit Prince</arg>
             <arg name="translated_title">小王子</arg>
             <arg name="content">《小王子》是一部充满哲理的童话故事，讲述了一个来自外星球的小王子的奇妙冒险...</arg>
-            <arg name="image_filename">le_petit_prince_cover.jpg</arg>
         </command>
 
         3. INCORRECT EXAMPLE - DO NOT USE:
@@ -93,7 +89,6 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
             <arg name="original_title">The Catcher in the Rye</arg>
             <arg name="translated_title">麦田里的守望者：一部探讨青春期叛逆与成长的经典小说，深刻剖析了现代社会中年轻人的困惑与迷茫</arg>
             <arg name="content">...</arg>
-            <arg name="image_filename">catcher_in_the_rye.jpg</arg>
         </command>
         THIS IS ABSOLUTELY WRONG! The translated_title is way over the 20-word limit. 
         Such long titles are strictly prohibited and will cause the post to fail. 
@@ -105,10 +100,10 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
         original_title = kwargs.get('original_title')
         translated_title = kwargs.get('translated_title')
         content = kwargs.get('content')
-        image_filename = kwargs.get('image_filename')
+        image_path = kwargs.get('image_path')
 
-        if not original_title or not translated_title or not content or not image_filename:
-            raise ValueError("'original_title', 'translated_title', 'content', and 'image_filename' are all required for the book review.")
+        if not original_title or not translated_title or not content:
+            raise ValueError("'original_title', 'translated_title', and 'content' are required for the book review.")
 
         if len(translated_title.split()) > 20:
             raise ValueError("The translated_title must be within 20 words.")
@@ -130,11 +125,11 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
             image_text_tab = self.page.locator(self.image_text_tab_selector)
             await image_text_tab.click()
 
-            await self.click_upload_button()
-            await self.select_file(image_filename)
-
-            await self.wait_for_image_upload()
-            await asyncio.sleep(1)
+            if image_path:
+                await self.click_upload_button()
+                await self.select_file(image_path)
+                await self.wait_for_image_upload()
+                await asyncio.sleep(1)
 
             await self._copy_paste_text(self.title_input_selector, book_review.title)
             await self._copy_paste_text(self.content_input_selector, book_review.content)
@@ -166,16 +161,16 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
         except Exception as e:
             raise Exception(f"Error clicking upload button: {str(e)}")
 
-    async def select_file(self, filename):
+    async def select_file(self, image_path):
         os_name = platform.system().lower()
         if os_name == 'darwin':
-            return await self.select_file_mac(filename)
+            return await self.select_file_mac(image_path)
         elif os_name in ['linux', 'windows']:
-            return await self.select_file_pyautogui(filename, os_name)
+            return await self.select_file_pyautogui(image_path, os_name)
         else:
             raise Exception(f"Unsupported operating system: {os_name}")
 
-    async def select_file_mac(self, filename):
+    async def select_file_mac(self, image_path):
         script = f'''
         tell application "System Events"
             tell process "Google Chrome"
@@ -183,7 +178,7 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
                 delay 1
                 keystroke "g" using {{command down, shift down}}
                 delay 1
-                keystroke "~/Downloads/{filename}"
+                keystroke "{image_path}"
                 delay 1
                 keystroke return
             end tell
@@ -197,7 +192,7 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
             print(f"Script output: {e.output}")
             return False
 
-    async def select_file_pyautogui(self, filename, os_name):
+    async def select_file_pyautogui(self, image_path, os_name):
         try:
             if os_name == 'linux':
                 pyautogui.hotkey('ctrl', 'l')
@@ -206,14 +201,7 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
             
             await asyncio.sleep(0.5)
             
-            if os_name == 'linux':
-                pyautogui.write(f'/home/{pyautogui.getuser()}/Downloads')
-            elif os_name == 'windows':
-                pyautogui.write(r'C:\Users\%USERNAME%\Downloads')
-            
-            pyautogui.press('enter')
-            await asyncio.sleep(0.5)
-            pyautogui.write(filename)
+            pyautogui.write(image_path)
             pyautogui.press('enter')
             return True
         except Exception as e:
