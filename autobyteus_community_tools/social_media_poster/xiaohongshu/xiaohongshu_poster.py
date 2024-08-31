@@ -125,11 +125,14 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
             image_text_tab = self.page.locator(self.image_text_tab_selector)
             await image_text_tab.click()
 
+            image_uploaded = False
             if image_path:
                 await self.click_upload_button()
                 await self.select_file(image_path)
-                await self.wait_for_image_upload()
-                await asyncio.sleep(1)
+                image_uploaded = True
+
+            await self.wait_for_image_upload(image_uploaded)
+            await asyncio.sleep(1)
 
             await self._copy_paste_text(self.title_input_selector, book_review.title)
             await self._copy_paste_text(self.content_input_selector, book_review.content)
@@ -208,17 +211,38 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
             print(f"Error using PyAutoGUI: {e}")
             return False
 
-    async def wait_for_image_upload(self):
+    async def wait_for_image_upload(self, image_uploaded: bool):
+        if image_uploaded:
+            try:
+                uploading_indicator = self.page.locator(self.uploading_indicator)
+                await uploading_indicator.wait_for(state='attached', timeout=30000)
+                await uploading_indicator.wait_for(state='detached', timeout=60000)
+                await asyncio.sleep(1)
+                print("Image upload completed successfully.")
+            except PlaywrightTimeoutError as e:
+                raise Exception(f"Timeout error while waiting for image upload: {str(e)}")
+            except Exception as e:
+                raise Exception(f"Error while waiting for image upload: {str(e)}")
+        else:
+            max_wait_time = 300  # 5 minutes
+            poll_interval = 5  # 5 seconds
+            elapsed_time = 0
+
+            while elapsed_time < max_wait_time:
+                if await self.is_post_ready():
+                    print("Post is ready for submission.")
+                    return
+                await asyncio.sleep(poll_interval)
+                elapsed_time += poll_interval
+
+            raise Exception("Timed out waiting for post to be ready for submission.")
+
+    async def is_post_ready(self):
         try:
-            uploading_indicator = self.page.locator(self.uploading_indicator)
-            await uploading_indicator.wait_for(state='attached', timeout=30000)
-            await uploading_indicator.wait_for(state='detached', timeout=60000)
-            await asyncio.sleep(1)
-            print("Image upload completed successfully.")
-        except PlaywrightTimeoutError as e:
-            raise Exception(f"Timeout error while waiting for image upload: {str(e)}")
-        except Exception as e:
-            raise Exception(f"Error while waiting for image upload: {str(e)}")
+            publish_button = self.page.locator(self.publish_button_selector)
+            return await publish_button.is_enabled()
+        except Exception:
+            return False
 
     async def wait_for_post_submission(self):
         try:
