@@ -16,7 +16,8 @@ async def test_xiaohongshu_poster_english_book():
     然而，小说最终揭示了这种理想的虚幻和空洞，通过盖茨比的悲剧命运，菲茨杰拉德批判了社会的腐败和道德的沦丧。
     这本书不仅是对那个时代的真实写照，更是对人性和社会的深刻反思。无论是语言的优美还是情节的紧凑，都让人难以忘怀。
     """
-    result = await xiaohongshu_poster.execute(original_title=original_title, translated_title=translated_title, content=content)
+    image_filename = "testimaging.webp"
+    result = await xiaohongshu_poster.execute(original_title=original_title, translated_title=translated_title, content=content, image_filename=image_filename)
 
     assert "published successfully on Xiaohongshu" in result
 
