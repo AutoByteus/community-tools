@@ -183,11 +183,7 @@ class XiaohongshuPoster(BaseTool, UIIntegrator):
                 delay 1
                 keystroke "g" using {{command down, shift down}}
                 delay 1
-                keystroke "~/Downloads"
-                delay 1
-                keystroke return
-                delay 1
-                keystroke "{filename}"
+                keystroke "~/Downloads/{filename}"
                 delay 1
                 keystroke return
             end tell
