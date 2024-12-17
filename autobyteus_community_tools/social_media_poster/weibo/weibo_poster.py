@@ -6,7 +6,7 @@ import logging
 import platform
 from typing import Optional
 from autobyteus.tools.base_tool import BaseTool
-from llm_ui_integration.ui_integrator import UIIntegrator
+from brui_core.ui_integrator import UIIntegrator
 from autobyteus.events.event_types import EventType
 from autobyteus.events.decorators import publish_event
 
